@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEFA8 — League Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Syne+Mono&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0D1117;
+  --surface: #161B22;
+  --surface2:#1F2937;
+  --border:  #30363D;
+  --text:    #E6EDF3;
+  --muted:   #7D8590;
+  --accent:  #F0883E;
+  --green:   #3FB950;
+  --blue:    #58A6FF;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, #F0883E08 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, #3FB95006 0%, transparent 50%);
+}
+
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+}
+.logo {
+  font-family: 'Syne Mono', monospace;
+  font-size: 16px;
+  letter-spacing: 4px;
+  color: var(--accent);
+}
+.header-sep { color: var(--border); }
+.header-sub {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.shell {
+  flex: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 64px 24px 80px;
+  width: 100%;
+}
+
+.hero {
+  margin-bottom: 56px;
+}
+.eyebrow {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(40px, 8vw, 72px);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--text) 0%, #7D8590 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-desc {
+  font-size: 16px;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width: 480px;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 600px) {
+  .tools-grid { grid-template-columns: 1fr; }
+  header { padding: 0 20px; }
+  .shell { padding: 40px 16px 60px; }
+}
+
+.tool-card {
+  display: block;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.tool-card:hover {
+  border-color: var(--card-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px #00000040;
+}
+.tool-card:hover::before { opacity: 1; }
+
+.tool-card.roster  { --card-accent: #58A6FF; }
+.tool-card.roster::before  { background: var(--blue); }
+
+.tool-card.setup   { --card-accent: #F0883E; }
+.tool-card.setup::before   { background: var(--accent); }
+
+.tool-card.register { --card-accent: #3FB950; }
+.tool-card.register::before { background: var(--green); }
+
+.tool-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  margin-bottom: 18px;
+}
+.tool-card.roster   .tool-icon { background: #58A6FF15; }
+.tool-card.setup    .tool-icon { background: #F0883E15; }
+.tool-card.register .tool-icon { background: #3FB95015; }
+
+.tool-tag {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.tool-card.roster   .tool-tag { color: var(--blue); }
+.tool-card.setup    .tool-tag { color: var(--accent); }
+.tool-card.register .tool-tag { color: var(--green); }
+
+.tool-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.tool-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.tool-arrow {
+  position: absolute;
+  bottom: 24px; right: 24px;
+  color: var(--muted);
+  font-size: 18px;
+  transition: transform 0.2s, color 0.2s;
+}
+.tool-card:hover .tool-arrow {
+  transform: translate(2px, -2px);
+  color: var(--card-accent);
+}
+
+/* ── LIVE REGISTRATION BANNER ── */
+.reg-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: linear-gradient(135deg, #3FB95018 0%, #3FB95008 100%);
+  border: 1px solid #3FB95040;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.reg-season-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.reg-season-note {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.reg-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green);
+  color: #000;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.reg-cta:hover { background: #52C96A; transform: translateY(-1px); box-shadow: 0 4px 16px #3FB95040; }
+.reg-cta[href="PASTE_REGISTRATION_LINK_HERE"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">W8</div>
+  <span class="header-sep">—</span>
+  <div class="header-sub">League Tools</div>
+</header>
+
+<div class="shell">
+  <div class="hero">
+    <div class="eyebrow">WEFA8 League Management</div>
+    <div class="hero-title">League<br>Tools</div>
+    <p class="hero-desc">Internal tools for WEFA8 league operations — roster management, season setup, and player registration.</p>
+  </div>
+
+  <!-- LIVE REGISTRATION LINK — paste the generated URL between the quotes in href="" -->
+  <div class="reg-banner">
+    <div class="reg-banner-left">
+      <div class="reg-season-label" id="regSeasonLabel">Current Season Registration</div>
+      <div class="reg-season-note">Click to register for the active season</div>
+    </div>
+    <a href="PASTE_REGISTRATION_LINK_HERE" class="reg-cta" id="regLink">
+      Register Now
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <div class="tools-grid">
+
+    <a href="check-team.html" class="tool-card roster">
+      <div class="tool-icon">📋</div>
+      <div class="tool-tag">Managers · Directors</div>
+      <div class="tool-name">Check Team Roster</div>
+      <p class="tool-desc">Look up any team by name and season. See all registered players and their payment status.</p>
+      <div class="tool-arrow">↗</div>
+    </a>
+
+    <a href="registration.html" class="tool-card register">
+      <div class="tool-icon">✅</div>
+      <div class="tool-tag">Players</div>
+      <div class="tool-name">Player Registration</div>
+      <p class="tool-desc">Register for the current season. Use the link above for the active season, or open this page directly if you have a registration link from your director.</p>
+      <div class="tool-arrow">↗</div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  WEFA8 · Internal Use Only
+</footer>
+
+<script>
+// Reads the season name out of the encoded registration link
+// so the banner label updates automatically when you paste a new link.
+(function() {
+  const link = document.getElementById('regLink');
+  const label = document.getElementById('regSeasonLabel');
+  if (!link) return;
+  const href = link.getAttribute('href');
+  if (!href || href === 'PASTE_REGISTRATION_LINK_HERE') return;
+  try {
+    const param = new URL(href).searchParams.get('teams');
+    if (!param) return;
+    const config = JSON.parse(decodeURIComponent(escape(atob(param))));
+    if (config.season) label.textContent = config.season + ' Registration';
+  } catch(e) { /* leave default label */ }
+})();
+</script>
+</body>
+</html>
