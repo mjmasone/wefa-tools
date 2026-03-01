@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEFA8 — Team Roster</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Syne+Mono&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── CONFIG NOTE ─────────────────────────────────────────────────────────────
+   ENVIRONMENT SWAP: Change APP_ID in the CONFIG block in <script> below.
+   PRODUCTION: 609ad46dbb2a10001bf7284d
+   TEST:       replace with your test app ID
+──────────────────────────────────────────────────────────────────────────── */
+:root {
+  --bg:      #0D1117;
+  --surface: #161B22;
+  --surface2:#1F2937;
+  --border:  #30363D;
+  --text:    #E6EDF3;
+  --muted:   #7D8590;
+  --accent:  #F0883E;
+  --green:   #3FB950;
+  --red:     #F85149;
+  --yellow:  #D29922;
+  --blue:    #58A6FF;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.logo {
+  font-family: 'Syne Mono', monospace;
+  font-size: 15px;
+  letter-spacing: 3px;
+  color: var(--accent);
+}
+.header-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.env-pill {
+  margin-left: auto;
+  background: #F0883E20;
+  border: 1px solid #F0883E40;
+  color: var(--accent);
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  text-transform: uppercase;
+}
+
+/* ── SHELL ── */
+.shell {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* ── SEARCH CARD ── */
+.search-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px;
+  margin-bottom: 36px;
+}
+
+.search-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 14px;
+  align-items: end;
+}
+@media (max-width: 640px) {
+  .search-row { grid-template-columns: 1fr; }
+  header, .api-banner { padding: 0 16px; }
+  .shell { padding: 28px 16px 60px; }
+}
+
+.field-group { display: flex; flex-direction: column; gap: 7px; }
+.field-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input[type="text"], select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 15px;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+input[type="text"]:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237D8590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+select option { background: var(--surface2); }
+
+.search-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 7px;
+  padding: 11px 28px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.search-btn:hover { background: #FFB066; transform: translateY(-1px); }
+.search-btn:active { transform: none; }
+.search-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ── RESULTS HEADER ── */
+.results-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.results-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+}
+.results-sub {
+  font-family: 'Syne Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+.export-btn {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 14px;
+  color: var(--muted);
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.export-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── SUMMARY PILLS ── */
+.summary-pills {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.pill {
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+.pill-total  { background: #58A6FF18; color: var(--blue);   border: 1px solid #58A6FF30; }
+.pill-paid   { background: #3FB95018; color: var(--green);  border: 1px solid #3FB95030; }
+.pill-unpaid { background: #F8514918; color: var(--red);    border: 1px solid #F8514930; }
+.pill-teams  { background: #F0883E18; color: var(--accent); border: 1px solid #F0883E30; }
+
+/* ── TEAM BLOCK ── */
+.team-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.team-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.team-name-display {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+.team-night-tag {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: #F0883E15;
+  color: var(--accent);
+  border: 1px solid #F0883E30;
+  text-transform: uppercase;
+}
+.team-mgr-tag {
+  font-size: 13px;
+  color: var(--muted);
+}
+.team-stats {
+  margin-left: auto;
+  display: flex;
+  gap: 16px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 12px;
+}
+.stat-paid   { color: var(--green); }
+.stat-unpaid { color: var(--red); }
+.stat-total  { color: var(--muted); }
+
+/* ── PLAYER TABLE ── */
+.player-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.player-table th {
+  text-align: left;
+  padding: 10px 24px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.player-table td {
+  padding: 13px 24px;
+  font-size: 14px;
+  border-bottom: 1px solid #30363D60;
+  vertical-align: middle;
+}
+.player-table tbody tr:last-child td { border-bottom: none; }
+.player-table tbody tr:hover { background: #ffffff04; }
+
+.player-name { font-weight: 600; }
+.player-sub  { font-size: 12px; color: var(--muted); font-family: 'Syne Mono', monospace; margin-top: 2px; }
+
+.pay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pay-badge::before { content:''; width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.pay-paid    { background:#3FB95015; color:var(--green); border:1px solid #3FB95030; }
+.pay-paid::before    { background:var(--green); }
+.pay-unpaid  { background:#F8514915; color:var(--red);   border:1px solid #F8514930; }
+.pay-unpaid::before  { background:var(--red); }
+
+.visit-badge {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--surface2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+/* ── STATES ── */
+.state-box {
+  text-align: center;
+  padding: 56px 24px;
+  color: var(--muted);
+}
+.state-icon { font-size: 36px; margin-bottom: 14px; opacity: 0.4; }
+.state-box p { font-size: 15px; margin-bottom: 6px; }
+.state-box small { font-family: 'Syne Mono', monospace; font-size: 12px; }
+
+.spinner {
+  width: 28px; height: 28px;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-box {
+  background: #F8514915;
+  border: 1px solid #F8514930;
+  border-radius: 8px;
+  padding: 14px 18px;
+  color: var(--red);
+  font-family: 'Syne Mono', monospace;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+
+
+<header>
+  <div class="logo">W8</div>
+  <div class="header-title">Team Roster</div>
+  <div class="env-pill" id="envPill">Production</div>
+</header>
+
+<div class="shell">
+
+  <div class="search-card">
+    <div class="search-row">
+      <div class="field-group">
+        <label class="field-label">Team Name</label>
+        <input type="text" id="teamInput" placeholder="Full or partial name…" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Season / Year</label>
+        <select id="seasonInput">
+          <option value="">— All records —</option>
+          <optgroup label="2026">
+            <option value="spring-2026">Spring 2026</option>
+            <option value="fall-2026">Fall 2026</option>
+            <option value="year-2026">All of 2026</option>
+          </optgroup>
+          <optgroup label="2025">
+            <option value="spring-2025">Spring 2025</option>
+            <option value="fall-2025">Fall 2025</option>
+            <option value="year-2025">All of 2025</option>
+          </optgroup>
+          <optgroup label="2024">
+            <option value="spring-2024">Spring 2024</option>
+            <option value="fall-2024">Fall 2024</option>
+            <option value="year-2024">All of 2024</option>
+          </optgroup>
+          <optgroup label="2023">
+            <option value="spring-2023">Spring 2023</option>
+            <option value="fall-2023">Fall 2023</option>
+            <option value="year-2023">All of 2023</option>
+          </optgroup>
+        </select>
+      </div>
+      <button class="search-btn" id="searchBtn" onclick="runSearch()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Search
+      </button>
+    </div>
+  </div>
+
+  <div id="resultsArea">
+    <div class="state-box">
+      <div class="state-icon">⚽</div>
+      <p>Enter a team name and season above</p>
+      <small>Partial names work — "red" matches "Red Devils"</small>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// ─── CONFIG — SWAP THIS BLOCK TO SWITCH ENVIRONMENTS ──────────────────
+// ═══════════════════════════════════════════════════════════════════════
+const CONFIG = {
+  APP_ID:  '609ad46dbb2a10001bf7284d', // PRODUCTION
+  // APP_ID:'YOUR_TEST_APP_ID_HERE',   // TEST — uncomment to switch
+  API_KEY: '124c547e-b0be-47a6-9b71-6c3ff0076925',
+  ENV:     'Production',
+
+  OBJ:         'object_1',
+  F_FIRST:     'field_2',
+  F_LAST:      'field_3',
+  F_JERSEY:    'field_398',
+  F_EMAIL:     'field_124',
+  F_PHONE:     'field_15',
+  F_ARRIVED:   'field_88',
+  F_VISIT_ST:  'field_191',
+  F_REG_DAY:   'field_443',
+  F_REG_MGR:   'field_444',
+  F_REG_TEAM:  'field_445',
+  F_PAYMENT:   'field_198',
+};
+// ═══════════════════════════════════════════════════════════════════════
+
+document.getElementById('envPill').textContent = CONFIG.ENV;
+
+// ── SEASON HELPER ─────────────────────────────────────────────────────
+function parseSeason(val) {
+  if (!val) return null;
+  const [half, year] = val.split('-');
+  return half === 'year' ? { year, half: 'all' } : { year, half };
+}
+
+function dateMatchesSeason(dateStr, season) {
+  if (!season || !dateStr) return !season;
+  const parts = dateStr.split('/');
+  if (parts.length < 3) return false;
+  const month = parseInt(parts[0], 10);
+  const year  = parts[2];
+  if (year !== season.year) return false;
+  if (season.half === 'all')    return true;
+  if (season.half === 'spring') return month >= 1 && month <= 6;
+  if (season.half === 'fall')   return month >= 7 && month <= 12;
+  return false;
+}
+
+// ── SEARCH ────────────────────────────────────────────────────────────
+async function runSearch() {
+  const apiKey = CONFIG.API_KEY;
+  const team   = document.getElementById('teamInput').value.trim();
+  const season = parseSeason(document.getElementById('seasonInput').value);
+  const area   = document.getElementById('resultsArea');
+
+  if (!team) {
+    area.innerHTML = `<div class="error-box">⚠ Please enter a team name to search.</div>`;
+    return;
+  }
+
+  area.innerHTML = `<div class="state-box"><div class="spinner"></div><p>Fetching roster…</p></div>`;
+  document.getElementById('searchBtn').disabled = true;
+
+  try {
+    const records  = await fetchRecords(apiKey, team);
+    const filtered = season
+      ? records.filter(r => dateMatchesSeason(getArrivedDate(r), season))
+      : records;
+    renderResults(filtered, team, season);
+  } catch(err) {
+    area.innerHTML = `<div class="error-box">❌ ${err.message}</div>`;
+  } finally {
+    document.getElementById('searchBtn').disabled = false;
+  }
+}
+
+// ── FETCH ─────────────────────────────────────────────────────────────
+async function fetchRecords(apiKey, team) {
+  const filters = encodeURIComponent(JSON.stringify({
+    match: 'and',
+    rules: [{ field: CONFIG.F_REG_TEAM, operator: 'contains', value: team }]
+  }));
+
+  let all = [], page = 1, totalPages = 1;
+  do {
+    const url = `https://api.knack.com/v1/objects/${CONFIG.OBJ}/records?page=${page}&rows_per_page=1000&filters=${filters}`;
+    const res = await fetch(url, {
+      headers: {
+        'X-Knack-Application-Id': CONFIG.APP_ID,
+        'X-Knack-REST-API-Key':   apiKey,
+        'Content-Type':           'application/json'
+      }
+    });
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(`Knack API ${res.status}: ${e.message || res.statusText}`);
+    }
+    const data = await res.json();
+    all = all.concat(data.records || []);
+    totalPages = data.total_pages || 1;
+    page++;
+  } while (page <= totalPages);
+
+  return all;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────
+function renderResults(records, teamSearch, season) {
+  const area = document.getElementById('resultsArea');
+
+  if (records.length === 0) {
+    const sl = seasonLabel(season);
+    area.innerHTML = `
+      <div class="state-box">
+        <div class="state-icon">⚽</div>
+        <p>No players found for "${esc(teamSearch)}"${sl ? ' in ' + sl : ''}</p>
+        <small>Try a shorter team name or a different season</small>
+      </div>`;
+    return;
+  }
+
+  // Group by RegTeam
+  const groups = new Map();
+  records.forEach(r => {
+    const key = (r[CONFIG.F_REG_TEAM] || '').trim() || '(No Team)';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(r);
+  });
+
+  let totalPaid = 0, totalUnpaid = 0;
+  records.forEach(r => isPaid(r) ? totalPaid++ : totalUnpaid++);
+
+  let blocksHtml = '';
+  groups.forEach((players, teamName) => {
+    // Use the most common manager + night across this group
+    const mgr   = mostCommon(players.map(p => p[CONFIG.F_REG_MGR] || '')) || '—';
+    const night = mostCommon(players.map(p => p[CONFIG.F_REG_DAY] || '')) || '';
+    let tPaid = 0, tUnpaid = 0;
+    players.forEach(p => isPaid(p) ? tPaid++ : tUnpaid++);
+
+    const rows = players.map(p => {
+      const paid = isPaid(p);
+      return `
+        <tr>
+          <td>
+            <div class="player-name">${esc(p[CONFIG.F_FIRST]||'')} ${esc(p[CONFIG.F_LAST]||'')}</div>
+            <div class="player-sub">#${esc(p[CONFIG.F_JERSEY]||'—')} · ${esc(p[CONFIG.F_EMAIL]||'—')}</div>
+          </td>
+          <td>${esc(p[CONFIG.F_ARRIVED]||'—')}</td>
+          <td><span class="visit-badge">${esc(p[CONFIG.F_VISIT_ST]||'—')}</span></td>
+          <td><span class="pay-badge ${paid?'pay-paid':'pay-unpaid'}">${paid?'Paid':'Unpaid'}</span></td>
+        </tr>`;
+    }).join('');
+
+    blocksHtml += `
+      <div class="team-block">
+        <div class="team-header">
+          <div class="team-name-display">${esc(teamName)}</div>
+          ${night ? `<div class="team-night-tag">${esc(night)}s</div>` : ''}
+          <div class="team-mgr-tag">Manager: ${esc(mgr)}</div>
+          <div class="team-stats">
+            <span class="stat-paid">✓ ${tPaid} paid</span>
+            <span class="stat-unpaid">✗ ${tUnpaid} unpaid</span>
+            <span class="stat-total">${players.length} total</span>
+          </div>
+        </div>
+        <table class="player-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Registered</th>
+              <th>Status</th>
+              <th>Payment</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  });
+
+  const sl = seasonLabel(season);
+  area.innerHTML = `
+    <div class="results-meta">
+      <div class="results-label">${esc(teamSearch)}</div>
+      ${sl ? `<div class="results-sub">${sl}</div>` : ''}
+      <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+    <div class="summary-pills">
+      <div class="pill pill-teams">⚽ ${groups.size} team${groups.size!==1?'s':''}</div>
+      <div class="pill pill-total">${records.length} players</div>
+      <div class="pill pill-paid">✓ ${totalPaid} paid</div>
+      <div class="pill pill-unpaid">✗ ${totalUnpaid} unpaid</div>
+    </div>
+    ${blocksHtml}`;
+
+  window._lastRecords = records;
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function isPaid(r) {
+  const val = r[CONFIG.F_PAYMENT];
+  if (!val) return false;
+  if (Array.isArray(val)) return val.length > 0;
+  if (typeof val === 'string') return val.trim() !== '' && val !== '[]';
+  if (typeof val === 'object') return !!(val.id || val.identifier);
+  return false;
+}
+
+function getArrivedDate(r) {
+  const raw = r[CONFIG.F_ARRIVED + '_raw'];
+  if (raw && raw.date) return raw.date;
+  return r[CONFIG.F_ARRIVED] || '';
+}
+
+function mostCommon(arr) {
+  const freq = {};
+  arr.forEach(v => { if (v) freq[v] = (freq[v]||0) + 1; });
+  return Object.entries(freq).sort((a,b) => b[1]-a[1])[0]?.[0] || '';
+}
+
+function seasonLabel(season) {
+  if (!season) return '';
+  if (season.half === 'all') return `All of ${season.year}`;
+  return `${season.half.charAt(0).toUpperCase()+season.half.slice(1)} ${season.year}`;
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── CSV EXPORT ────────────────────────────────────────────────────────
+function exportCSV() {
+  const records = window._lastRecords || [];
+  const headers = ['Team','Manager','Night','First Name','Last Name',
+                   'Jersey','Email','Phone','Registered','Visit Status','Payment'];
+  const rows = records.map(r => [
+    r[CONFIG.F_REG_TEAM] || '',
+    r[CONFIG.F_REG_MGR]  || '',
+    r[CONFIG.F_REG_DAY]  || '',
+    r[CONFIG.F_FIRST]    || '',
+    r[CONFIG.F_LAST]     || '',
+    r[CONFIG.F_JERSEY]   || '',
+    r[CONFIG.F_EMAIL]    || '',
+    r[CONFIG.F_PHONE]    || '',
+    r[CONFIG.F_ARRIVED]  || '',
+    r[CONFIG.F_VISIT_ST] || '',
+    isPaid(r) ? 'Paid' : 'Unpaid'
+  ]);
+  const csv = [headers, ...rows]
+    .map(row => row.map(c => `"${String(c).replace(/"/g,'""')}"`).join(','))
+    .join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = `roster-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// Enter key triggers search
+['teamInput','seasonInput'].forEach(id => {
+  document.getElementById(id)?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') runSearch();
+  });
+});
+</script>
+</body>
+</html>

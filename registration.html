@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEFA8 — Player Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Syne+Mono&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── CONFIG NOTE ─────────────────────────────────────────────────────────────
+   ENVIRONMENT SWAP: Change APP_ID in the CONFIG block in <script> below.
+   PRODUCTION: 609ad46dbb2a10001bf7284d
+   TEST:       replace with your test app ID
+──────────────────────────────────────────────────────────────────────────── */
+:root {
+  --bg:      #0D1117;
+  --surface: #161B22;
+  --surface2:#1F2937;
+  --border:  #30363D;
+  --text:    #E6EDF3;
+  --muted:   #7D8590;
+  --accent:  #F0883E;
+  --green:   #3FB950;
+  --red:     #F85149;
+  --yellow:  #D29922;
+  --blue:    #58A6FF;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.logo {
+  font-family: 'Syne Mono', monospace;
+  font-size: 15px;
+  letter-spacing: 3px;
+  color: var(--accent);
+}
+.header-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.season-pill {
+  margin-left: auto;
+  background: #3FB95018;
+  border: 1px solid #3FB95040;
+  color: var(--green);
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+
+/* ── SHELL ── */
+.shell {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.page-eyebrow {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 7vw, 60px);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.page-title span { color: var(--accent); }
+.page-desc {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px;
+  margin-bottom: 16px;
+}
+.card-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ── FORM ELEMENTS ── */
+.field-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+.field-group:last-child { margin-bottom: 0; }
+.field-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.req { color: var(--accent); margin-left: 2px; }
+
+input[type="text"], input[type="email"], input[type="tel"], select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 11px 14px;
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 15px;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px #F0883E18;
+}
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237D8590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+select option { background: var(--surface2); }
+
+/* Team select — highlighted */
+.team-select select {
+  border-color: var(--accent);
+  font-size: 16px;
+  padding: 13px 36px 13px 14px;
+}
+.team-select select:focus { box-shadow: 0 0 0 3px #F0883E25; }
+
+.night-pill {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+.night-pill.active {
+  color: var(--green);
+  background: #3FB95015;
+  border-color: #3FB95040;
+}
+
+.mgr-line {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+  font-family: 'Syne Mono', monospace;
+  display: none;
+}
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 520px) {
+  .two-col { grid-template-columns: 1fr; }
+  header { padding: 0 16px; }
+  .shell { padding: 32px 16px 60px; }
+}
+
+/* ── SUBMIT ── */
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.submit-btn:hover { background: #FFB066; transform: translateY(-1px); box-shadow: 0 4px 16px #F0883E30; }
+.submit-btn:active { transform: none; }
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ── SUCCESS ── */
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 56px 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.success-screen.visible { display: block; }
+.success-icon {
+  width: 68px; height: 68px;
+  background: #3FB95015;
+  border: 1px solid #3FB95040;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 30px;
+}
+.success-screen h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.success-screen p { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 24px; }
+.success-detail {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  text-align: left;
+  max-width: 360px;
+  margin: 0 auto 24px;
+}
+.success-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+.success-row:last-child { border-bottom: none; }
+.success-row span:first-child {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.success-row span:last-child { font-weight: 600; color: var(--text); }
+.reset-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 22px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.reset-btn:hover { border-color: var(--text); color: var(--text); }
+
+/* ── NO CONFIG ── */
+.no-config-screen {
+  text-align: center;
+  padding: 80px 32px;
+  color: var(--muted);
+}
+.no-config-screen .icon { font-size: 40px; margin-bottom: 16px; opacity: 0.4; }
+.no-config-screen h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.no-config-screen p { font-size: 14px; line-height: 1.7; max-width: 360px; margin: 0 auto; }
+
+/* ── STATES ── */
+.error-box {
+  background: #F8514915;
+  border: 1px solid #F8514930;
+  border-radius: 7px;
+  padding: 12px 16px;
+  color: var(--red);
+  font-family: 'Syne Mono', monospace;
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+.spinner {
+  width: 24px; height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">W8</div>
+  <div class="header-title">Player Registration</div>
+  <div class="season-pill" id="headerSeason">Loading…</div>
+</header>
+
+<div class="shell">
+  <div id="pageEyebrow" class="page-eyebrow">WEFA8 League</div>
+  <div class="page-title">Join the<br><span>League</span></div>
+  <p class="page-desc" id="pageDesc">Fill in your details below to register for this season.</p>
+
+  <div id="mainArea">
+    <div style="text-align:center; padding:40px;"><div class="spinner"></div></div>
+  </div>
+
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">⚽</div>
+    <h2>You're Registered!</h2>
+    <p>Your registration has been submitted. See you on the pitch!</p>
+    <div class="success-detail" id="successDetail"></div>
+    <button class="reset-btn" onclick="resetForm()">Register Another Player</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// ─── CONFIG — SWAP APP_ID TO SWITCH ENVIRONMENTS ──────────────────────
+// ═══════════════════════════════════════════════════════════════════════
+const CONFIG = {
+  APP_ID:   '609ad46dbb2a10001bf7284d', // PRODUCTION
+  // APP_ID:'YOUR_TEST_APP_ID_HERE',    // TEST — uncomment to switch
+  API_KEY:  '124c547e-b0be-47a6-9b71-6c3ff0076925',
+  ENV:      'Production',
+
+  OBJ:      'object_1',
+  F_FIRST:  'field_2',
+  F_LAST:   'field_3',
+  F_PHONE:  'field_15',
+  F_EMAIL:  'field_124',
+  F_JERSEY: 'field_398',
+  F_DAY:    'field_443',
+  F_MGR:    'field_444',
+  F_TEAM:   'field_445',
+  F_ARRIVED:'field_88',
+  F_STATUS: 'field_191',
+};
+// ═══════════════════════════════════════════════════════════════════════
+
+let seasonConfig = null;
+
+// ── INIT ──────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  seasonConfig = readUrlConfig();
+  const area = document.getElementById('mainArea');
+
+  if (!seasonConfig) {
+    document.getElementById('headerSeason').textContent = 'Registration Closed';
+    document.getElementById('headerSeason').style.background = '#F8514915';
+    document.getElementById('headerSeason').style.borderColor = '#F8514930';
+    document.getElementById('headerSeason').style.color = 'var(--red)';
+    document.getElementById('pageDesc').textContent = 'Registration is not currently open.';
+    area.innerHTML = `
+      <div class="no-config-screen">
+        <div class="icon">🔒</div>
+        <h2>Registration Not Open</h2>
+        <p>This page needs to be opened via the link provided by your league director. Please contact them for the correct registration link.</p>
+      </div>`;
+    return;
+  }
+
+  const season = seasonConfig.season || 'Current Season';
+  document.getElementById('headerSeason').textContent = season;
+  document.getElementById('pageDesc').textContent =
+    `Register for ${season}. Fields marked * are required.`;
+
+  buildForm();
+});
+
+// ── READ URL CONFIG ────────────────────────────────────────────────────
+function readUrlConfig() {
+  const param = new URLSearchParams(window.location.search).get('teams');
+  if (!param) return null;
+  try {
+    return JSON.parse(decodeURIComponent(escape(atob(param))));
+  } catch(e) { return null; }
+}
+
+// ── BUILD FORM ─────────────────────────────────────────────────────────
+function buildForm() {
+  const teams  = seasonConfig?.teams || [];
+  const season = seasonConfig?.season || '';
+
+  const teamOpts = teams.length > 0
+    ? teams.map(t =>
+        `<option value="${esc(t.team)}" data-mgr="${esc(t.mgr||'')}" data-night="${esc(t.night||'')}">${esc(t.team)}${t.night ? ' — ' + t.night + 's' : ''}</option>`
+      ).join('')
+    : '<option value="">No teams available</option>';
+
+  document.getElementById('mainArea').innerHTML = `
+    <div id="formError"></div>
+
+    <div class="card">
+      <div class="card-label">Team Selection</div>
+      <div class="field-group team-select">
+        <label class="field-label">Your Team <span class="req">*</span></label>
+        <select id="teamSelect" onchange="onTeamChange()">
+          <option value="">— Choose a team —</option>
+          ${teamOpts}
+        </select>
+        <div class="night-pill" id="nightPill">Select a team to see play night</div>
+        <div class="mgr-line" id="mgrLine"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Player Information</div>
+      <div class="two-col">
+        <div class="field-group">
+          <label class="field-label">First Name <span class="req">*</span></label>
+          <input type="text" id="firstName" placeholder="First name" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Last Name <span class="req">*</span></label>
+          <input type="text" id="lastName" placeholder="Last name" />
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="field-group">
+          <label class="field-label">Phone <span class="req">*</span></label>
+          <input type="tel" id="phone" placeholder="(555) 555-5555" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Email</label>
+          <input type="email" id="email" placeholder="your@email.com" />
+        </div>
+      </div>
+      <div class="field-group" style="max-width:180px;">
+        <label class="field-label">Jersey # <span style="color:var(--muted); font-size:9px;">(optional)</span></label>
+        <input type="text" id="jersey" placeholder="e.g. 7" />
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitRegistration()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Register for ${esc(season)}
+    </button>
+    <p style="text-align:center; font-size:11px; color:var(--muted); margin-top:10px; font-family:'Syne Mono',monospace; letter-spacing:1px;">
+      Submitted directly to the WEFA8 database
+    </p>`;
+}
+
+function onTeamChange() {
+  const sel   = document.getElementById('teamSelect');
+  const opt   = sel.options[sel.selectedIndex];
+  const night = opt?.dataset?.night || '';
+  const mgr   = opt?.dataset?.mgr   || '';
+  const pill  = document.getElementById('nightPill');
+  const mgrLine = document.getElementById('mgrLine');
+
+  if (night) {
+    pill.textContent = `⚽  ${night}s`;
+    pill.className = 'night-pill active';
+  } else {
+    pill.textContent = 'No night assigned';
+    pill.className = 'night-pill';
+  }
+
+  if (mgr) {
+    mgrLine.textContent = `Manager: ${mgr}`;
+    mgrLine.style.display = 'block';
+  } else {
+    mgrLine.style.display = 'none';
+  }
+}
+
+// ── SUBMIT ─────────────────────────────────────────────────────────────
+async function submitRegistration() {
+  const errEl = document.getElementById('formError');
+  const btn   = document.getElementById('submitBtn');
+  errEl.innerHTML = '';
+
+  const teamSel  = document.getElementById('teamSelect');
+  const team     = teamSel.value;
+  const opt      = teamSel.options[teamSel.selectedIndex];
+  const night    = opt?.dataset?.night || '';
+  const mgr      = opt?.dataset?.mgr   || '';
+  const first    = document.getElementById('firstName').value.trim();
+  const last     = document.getElementById('lastName').value.trim();
+  const phone    = document.getElementById('phone').value.trim();
+  const email    = document.getElementById('email').value.trim();
+  const jersey   = document.getElementById('jersey').value.trim();
+  const season   = seasonConfig?.season || '';
+
+  const errors = [];
+  if (!team)  errors.push('Please select a team.');
+  if (!first) errors.push('First name is required.');
+  if (!last)  errors.push('Last name is required.');
+  if (!phone) errors.push('Phone number is required.');
+  if (errors.length) {
+    errEl.innerHTML = `<div class="error-box">⚠ ${errors.join('<br>')}</div>`;
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = `<div class="spinner" style="width:18px;height:18px;margin:0;border-width:2px;"></div> Submitting…`;
+
+  try {
+    const now     = new Date();
+    const dateStr = `${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}/${now.getFullYear()}`;
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+    const payload = {
+      [CONFIG.F_FIRST]:  first,
+      [CONFIG.F_LAST]:   last,
+      [CONFIG.F_PHONE]:  phone,
+      [CONFIG.F_EMAIL]:  email,
+      [CONFIG.F_JERSEY]: jersey,
+      [CONFIG.F_TEAM]:   team,
+      [CONFIG.F_MGR]:    mgr,
+      [CONFIG.F_DAY]:    night,
+      [CONFIG.F_ARRIVED]:{ date: dateStr, time: timeStr, am_pm: now.getHours() >= 12 ? 'PM' : 'AM' },
+      [CONFIG.F_STATUS]: 'Registered',
+    };
+
+    const res = await fetch(`https://api.knack.com/v1/objects/${CONFIG.OBJ}/records`, {
+      method: 'POST',
+      headers: {
+        'X-Knack-Application-Id': CONFIG.APP_ID,
+        'X-Knack-REST-API-Key':   CONFIG.API_KEY,
+        'Content-Type':           'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(e.message || `API error ${res.status}`);
+    }
+
+    document.getElementById('mainArea').style.display = 'none';
+    document.getElementById('successScreen').classList.add('visible');
+    document.getElementById('successDetail').innerHTML = `
+      <div class="success-row"><span>Name</span><span>${esc(first)} ${esc(last)}</span></div>
+      <div class="success-row"><span>Team</span><span>${esc(team)}</span></div>
+      <div class="success-row"><span>Night</span><span>${esc(night||'—')}</span></div>
+      <div class="success-row"><span>Manager</span><span>${esc(mgr||'—')}</span></div>
+      <div class="success-row"><span>Season</span><span>${esc(season)}</span></div>`;
+
+  } catch(err) {
+    errEl.innerHTML = `<div class="error-box">❌ Submission failed: ${err.message}</div>`;
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Register for ${esc(season)}`;
+  }
+}
+
+function resetForm() {
+  document.getElementById('successScreen').classList.remove('visible');
+  document.getElementById('mainArea').style.display = 'block';
+  document.getElementById('formError').innerHTML = '';
+  ['teamSelect','firstName','lastName','phone','email','jersey'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const pill = document.getElementById('nightPill');
+  if (pill) { pill.textContent = 'Select a team to see play night'; pill.className = 'night-pill'; }
+  const mgrLine = document.getElementById('mgrLine');
+  if (mgrLine) mgrLine.style.display = 'none';
+  const btn = document.getElementById('submitBtn');
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Register for ${esc(seasonConfig?.season||'Season')}`;
+  }
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

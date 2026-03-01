@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEFA8 — Season Setup</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Syne+Mono&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── CONFIG NOTE ─────────────────────────────────────────────────────────────
+   ENVIRONMENT SWAP: Change APP_ID in the <script> CONFIG block at bottom.
+   PRODUCTION: 609ad46dbb2a10001bf7284d
+   TEST:       replace with your test app ID
+──────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --bg:        #F5F2EB;
+  --surface:   #FFFFFF;
+  --surface2:  #EDE9E0;
+  --ink:       #1A1612;
+  --ink2:      #6B6055;
+  --accent:    #C8401A;
+  --accent2:   #E8622A;
+  --green:     #2D6A4F;
+  --border:    #D5CFC4;
+  --shadow:    0 2px 16px #1A161210;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Instrument Sans', sans-serif;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 0% 0%, #C8401A0A 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, #2D6A4F08 0%, transparent 50%);
+}
+
+/* ── HEADER ────────────────────────────────────────────────────────────────── */
+header {
+  background: var(--ink);
+  color: #F5F2EB;
+  padding: 0 48px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.logo {
+  font-family: 'Syne Mono', monospace;
+  font-size: 18px;
+  letter-spacing: 4px;
+  color: var(--accent2);
+}
+header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #F5F2EB99;
+}
+.env-tag {
+  margin-left: auto;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 4px 10px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────────────────────────── */
+.shell {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+.page-eyebrow {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 6vw, 60px);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.page-desc {
+  color: var(--ink2);
+  font-size: 15px;
+  font-weight: 300;
+  margin-bottom: 48px;
+  max-width: 540px;
+  line-height: 1.6;
+}
+
+/* ── CARDS ──────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.card-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── FORM ELEMENTS ──────────────────────────────────────────────────────────── */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.field-row.three { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 600px) {
+  .field-row, .field-row.three { grid-template-columns: 1fr; }
+  header { padding: 0 20px; }
+  .shell { padding: 32px 16px 60px; }
+}
+
+.field-group { display: flex; flex-direction: column; gap: 8px; }
+.field-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+input[type="text"], input[type="password"], input[type="email"], select {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--ink);
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 15px;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px #C8401A15;
+  background: #fff;
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6055' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 12px #C8401A30; }
+.btn-primary:active { transform: none; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--ink); }
+
+.btn-green {
+  background: var(--green);
+  color: #fff;
+}
+.btn-green:hover { background: #3a8a65; transform: translateY(-1px); box-shadow: 0 4px 12px #2D6A4F30; }
+
+/* ── LOGIN SCREEN ────────────────────────────────────────────────────────────── */
+#loginScreen { max-width: 440px; }
+.login-note {
+  font-size: 13px;
+  color: var(--ink2);
+  margin-top: 16px;
+  line-height: 1.6;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-radius: 6px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 12px;
+}
+
+/* ── SEASON BAR ──────────────────────────────────────────────────────────────── */
+.season-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 32px;
+  background: var(--ink);
+  border-radius: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.season-bar label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #F5F2EB80;
+  text-transform: uppercase;
+}
+.season-bar select {
+  background: #ffffff15;
+  border: 1px solid #ffffff20;
+  color: #F5F2EB;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 36px 10px 14px;
+  border-radius: 6px;
+  min-width: 160px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23F5F2EB' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.season-bar select:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px #E8622A20; }
+.season-bar select option { background: #1A1612; }
+
+/* ── TEAM TABLE ──────────────────────────────────────────────────────────────── */
+.team-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.ctrl-link {
+  font-size: 13px;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s;
+  background: none;
+  border: none;
+  font-family: inherit;
+  padding: 0;
+}
+.ctrl-link:hover { text-decoration-color: var(--accent); }
+.ctrl-sep { color: var(--border); }
+
+.team-list { display: flex; flex-direction: column; gap: 10px; }
+
+.team-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 180px;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  transition: all 0.2s;
+}
+.team-row.active {
+  border-color: var(--green);
+  background: #2D6A4F08;
+}
+@media (max-width: 650px) {
+  .team-row { grid-template-columns: 36px 1fr; grid-template-rows: auto auto; }
+  .team-row .team-night, .team-row .team-actions { grid-column: 2; }
+}
+
+.team-check {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--green);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.team-info {}
+.team-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+.team-mgr {
+  font-size: 13px;
+  color: var(--ink2);
+  margin-top: 2px;
+}
+
+.team-night select {
+  font-size: 14px;
+  padding: 8px 32px 8px 12px;
+}
+.team-night select:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.team-count {
+  font-family: 'Syne Mono', monospace;
+  font-size: 12px;
+  color: var(--ink2);
+  white-space: nowrap;
+}
+
+/* ── SUMMARY / GENERATE ──────────────────────────────────────────────────────── */
+.generate-bar {
+  background: var(--ink);
+  border-radius: 12px;
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.generate-summary {
+  flex: 1;
+}
+.generate-summary strong {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  color: #F5F2EB;
+  display: block;
+  margin-bottom: 4px;
+}
+.generate-summary span {
+  font-family: 'Syne Mono', monospace;
+  font-size: 12px;
+  color: #F5F2EB60;
+}
+
+/* ── LINK OUTPUT ─────────────────────────────────────────────────────────────── */
+.link-output {
+  margin-top: 24px;
+  background: #F0FFF6;
+  border: 1.5px solid var(--green);
+  border-radius: 12px;
+  padding: 28px 32px;
+  display: none;
+}
+.link-output.visible { display: block; }
+.link-output-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 16px;
+}
+.link-box {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.link-url {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #2D6A4F40;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 12px;
+  color: var(--ink2);
+  word-break: break-all;
+  min-width: 200px;
+  line-height: 1.5;
+}
+.copy-btn {
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.copy-btn:hover { background: #3a8a65; }
+.copy-btn.copied { background: #1a4a30; }
+.link-instructions {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.7;
+}
+.link-instructions strong { color: var(--ink); }
+
+/* ── STATES ─────────────────────────────────────────────────────────────────── */
+.state-box {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--ink2);
+}
+.spinner {
+  width: 28px; height: 28px;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-box {
+  background: #FFF0ED;
+  border: 1px solid #C8401A40;
+  border-radius: 8px;
+  padding: 14px 18px;
+  color: var(--accent);
+  font-family: 'Syne Mono', monospace;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+/* ── MAIN SCREEN hidden by default ────────────────────────────────────────── */
+#mainScreen { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">W8</div>
+  <h1>Season Setup</h1>
+  <div class="env-tag" id="envTag">Production</div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="shell" id="loginScreen">
+  <div class="page-eyebrow">Director Access</div>
+  <div class="page-title">Season<br>Setup</div>
+  <p class="page-desc">Log in with your General Manager credentials to configure teams for the new season.</p>
+
+  <div class="card" style="max-width:420px;">
+    <div class="card-label">General Manager Login</div>
+    <div id="loginError"></div>
+    <div class="field-group" style="margin-bottom:16px;">
+      <label class="field-label">Email</label>
+      <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="username" />
+    </div>
+    <div class="field-group" style="margin-bottom:24px;">
+      <label class="field-label">Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="btn btn-primary" id="loginBtn" onclick="doLogin()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Sign In
+    </button>
+    <div class="login-note">
+      Uses your Knack General Manager account. Credentials are sent directly to Knack and never stored by this page.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MAIN SCREEN
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="shell" id="mainScreen">
+  <div class="page-eyebrow" id="welcomeLabel">Signed in</div>
+  <div class="page-title">Configure<br>Teams</div>
+  <p class="page-desc">Select which teams are active this season, assign their night, then generate the registration link to share with players.</p>
+
+  <!-- SEASON SELECTOR -->
+  <div class="season-bar">
+    <label>New Season</label>
+    <select id="seasonSelect">
+      <option value="Spring 2026">Spring 2026</option>
+      <option value="Fall 2026">Fall 2026</option>
+      <option value="Spring 2025">Spring 2025</option>
+      <option value="Fall 2025">Fall 2025</option>
+      <option value="Spring 2024">Spring 2024</option>
+      <option value="Fall 2024">Fall 2024</option>
+    </select>
+    <label style="margin-left:16px;">Source season to copy from</label>
+    <select id="sourceSeasonSelect">
+      <option value="">All recent records</option>
+      <option value="Fall 2025">Fall 2025</option>
+      <option value="Spring 2025">Spring 2025</option>
+      <option value="Fall 2024">Fall 2024</option>
+      <option value="Spring 2024">Spring 2024</option>
+    </select>
+    <button class="btn btn-secondary" style="color:#F5F2EB; border-color:#ffffff30; background:#ffffff10; margin-left:8px;" onclick="loadTeams()">
+      Reload Teams
+    </button>
+  </div>
+
+  <!-- TEAM LIST -->
+  <div class="card">
+    <div class="card-label">Teams from Previous Season</div>
+    <div class="team-controls">
+      <button class="ctrl-link" onclick="selectAll(true)">Select all</button>
+      <span class="ctrl-sep">·</span>
+      <button class="ctrl-link" onclick="selectAll(false)">Deselect all</button>
+      <span class="ctrl-sep">·</span>
+      <span id="activeCount" style="font-size:13px; color:var(--ink2); font-family:'Syne Mono',monospace;">0 teams active</span>
+    </div>
+    <div id="teamListArea">
+      <div class="state-box"><div class="spinner"></div><p>Loading teams from Knack…</p></div>
+    </div>
+  </div>
+
+  <!-- REGISTRATION URL CONFIG -->
+  <div class="card">
+    <div class="card-label">Registration Page URL</div>
+    <p style="font-size:14px; color:var(--ink2); margin-bottom:16px; line-height:1.6;">
+      Enter the full URL where your registration page is hosted. The team list will be encoded into the link.
+    </p>
+    <div class="field-group">
+      <label class="field-label">Registration Page URL</label>
+      <input type="text" id="regPageUrl" placeholder="https://yoursite.com/registration.html" value="" />
+    </div>
+  </div>
+
+  <!-- GENERATE BAR -->
+  <div class="generate-bar">
+    <div class="generate-summary">
+      <strong id="generateSummaryText">Select teams above to continue</strong>
+      <span id="generateSummaryDetail">No teams selected</span>
+    </div>
+    <button class="btn btn-green" id="generateBtn" onclick="generateLink()" disabled>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      Generate Registration Link
+    </button>
+  </div>
+
+  <!-- LINK OUTPUT -->
+  <div class="link-output" id="linkOutput">
+    <div class="link-output-label">✓ Registration Link Ready</div>
+    <div class="link-box">
+      <div class="link-url" id="generatedUrl">—</div>
+      <button class="copy-btn" id="copyBtn" onclick="copyLink()">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Link
+      </button>
+    </div>
+    <div class="link-instructions">
+      <strong>How to share:</strong> Copy this link and send it to your players via email, text, or post it on your team page.
+      Players who click the link will see the registration form pre-loaded with the active teams for <strong id="linkSeason">this season</strong>.
+      <br><br>
+      <strong>Important:</strong> Generate a new link at the start of each season. Old links will still work but will show last season's teams.
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// ─── CONFIG — SWAP THIS BLOCK TO SWITCH ENVIRONMENTS ─────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+const CONFIG = {
+  APP_ID:   '609ad46dbb2a10001bf7284d',  // PRODUCTION — swap for TEST app ID
+  API_KEY:  '124c547e-b0be-47a6-9b71-6c3ff0076925',
+  ENV:      'Production',                  // Label shown in header
+  // Knack object/field keys — update here if schema changes
+  OBJ_VISIT:    'object_1',
+  F_REG_TEAM:   'field_445',
+  F_REG_MGR:    'field_444',
+  F_REG_DAY:    'field_443',
+  F_ARRIVED:    'field_88',
+  F_VISIT_NUM:  'field_158',
+  // Knack user object for GM login
+  OBJ_GM:       'object_11',
+};
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const API = `https://api.knack.com/v1`;
+let userToken = null;
+let teamsData  = [];
+
+// Set env label
+document.getElementById('envTag').textContent = CONFIG.ENV;
+
+// ── NIGHTS ───────────────────────────────────────────────────────────────────
+const NIGHTS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const email    = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl    = document.getElementById('loginError');
+  const btn      = document.getElementById('loginBtn');
+
+  if (!email || !password) {
+    errEl.innerHTML = `<div class="error-box">Please enter your email and password.</div>`;
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+  errEl.innerHTML = '';
+
+  try {
+    const res = await fetch(`${API}/applications/${CONFIG.APP_ID}/session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Knack-Application-Id': CONFIG.APP_ID },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.session?.user?.token) {
+      throw new Error(data.message || 'Invalid credentials. Please check your email and password.');
+    }
+
+    // Verify this is a General Manager account
+    const roles = data.session?.user?.profile_keys || [];
+    // object_11 is General_Manager — Knack returns profile keys like "profile_11"
+    // We'll allow login for any authenticated user and show a note if not GM
+    userToken = data.session.user.token;
+
+    const name = data.session.user.name || email;
+    document.getElementById('welcomeLabel').textContent = `Welcome, ${name}`;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'block';
+
+    await loadTeams();
+
+  } catch(err) {
+    errEl.innerHTML = `<div class="error-box">⚠ ${err.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Sign In`;
+  }
+}
+
+// ── LOAD TEAMS ────────────────────────────────────────────────────────────────
+async function loadTeams() {
+  const area = document.getElementById('teamListArea');
+  area.innerHTML = `<div class="state-box"><div class="spinner"></div><p>Fetching teams from Knack…</p></div>`;
+  document.getElementById('linkOutput').classList.remove('visible');
+
+  const sourceSeason = document.getElementById('sourceSeasonSelect').value;
+
+  try {
+    // Fetch recent visit records — get RegTeam + RegManager combinations
+    // We pull up to 1000 records and deduplicate client-side
+    let url = `${API}/objects/${CONFIG.OBJ_VISIT}/records?rows_per_page=1000&sort_field=${CONFIG.F_VISIT_NUM}&sort_order=desc`;
+
+    const res = await fetch(url, {
+      headers: {
+        'X-Knack-Application-Id': CONFIG.APP_ID,
+        'X-Knack-REST-API-Key':   CONFIG.API_KEY,
+        'Authorization': userToken,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!res.ok) throw new Error(`Knack API error: ${res.status}`);
+    const data = await res.json();
+    let records = data.records || [];
+
+    // Filter by source season if specified (match RegDay or Arrived date)
+    if (sourceSeason) {
+      const [term, year] = sourceSeason.split(' ');
+      records = records.filter(r => {
+        const arrived = r[CONFIG.F_ARRIVED] || '';
+        const regDay  = r[CONFIG.F_REG_DAY] || '';
+        // Match year in arrived date
+        if (!arrived.includes(year)) return false;
+        // Match season term (Spring = Jan-Jun, Fall = Jul-Dec)
+        if (term === 'Spring') {
+          const month = parseInt((arrived.split('/')[0] || '0'));
+          return month >= 1 && month <= 6;
+        } else if (term === 'Fall') {
+          const month = parseInt((arrived.split('/')[0] || '0'));
+          return month >= 7 && month <= 12;
+        }
+        return true;
+      });
+    }
+
+    // Deduplicate by RegTeam + RegManager
+    const seen = new Map();
+    records.forEach(r => {
+      const team = (r[CONFIG.F_REG_TEAM] || '').trim();
+      const mgr  = (r[CONFIG.F_REG_MGR]  || '').trim();
+      const night = (r[CONFIG.F_REG_DAY]  || '').trim();
+      if (!team) return;
+      const key = `${team}|||${mgr}`;
+      if (!seen.has(key)) {
+        seen.set(key, { team, mgr, night, count: 1 });
+      } else {
+        seen.get(key).count++;
+      }
+    });
+
+    teamsData = Array.from(seen.values()).sort((a,b) => a.team.localeCompare(b.team));
+
+    if (teamsData.length === 0) {
+      area.innerHTML = `<div class="state-box"><p>No teams found for the selected source season.<br><small style="font-size:12px;">Try selecting "All recent records" in the source season dropdown.</small></p></div>`;
+      return;
+    }
+
+    renderTeamList();
+
+  } catch(err) {
+    area.innerHTML = `<div class="error-box">⚠ ${err.message}</div>`;
+  }
+}
+
+// ── RENDER TEAM LIST ──────────────────────────────────────────────────────────
+function renderTeamList() {
+  const area = document.getElementById('teamListArea');
+  const rows = teamsData.map((t, i) => {
+    const nightOpts = NIGHTS.map(n =>
+      `<option value="${n}" ${t.night === n ? 'selected' : ''}>${n}</option>`
+    ).join('');
+    return `
+      <div class="team-row" id="row-${i}" data-idx="${i}">
+        <input type="checkbox" class="team-check" id="chk-${i}" data-idx="${i}"
+          onchange="onTeamToggle(${i})" />
+        <div class="team-info">
+          <div class="team-name">${escHtml(t.team)}</div>
+          <div class="team-mgr">Manager: ${escHtml(t.mgr || '—')}</div>
+        </div>
+        <div class="team-night">
+          <select id="night-${i}" data-idx="${i}" disabled onchange="onNightChange(${i})">
+            <option value="">— Select night —</option>
+            ${nightOpts}
+          </select>
+        </div>
+        <div class="team-count">${t.count} prev. registrations</div>
+      </div>`;
+  }).join('');
+
+  area.innerHTML = `<div class="team-list">${rows}</div>`;
+  updateSummary();
+}
+
+function onTeamToggle(i) {
+  const chk  = document.getElementById(`chk-${i}`);
+  const row  = document.getElementById(`row-${i}`);
+  const sel  = document.getElementById(`night-${i}`);
+  row.classList.toggle('active', chk.checked);
+  sel.disabled = !chk.checked;
+  updateSummary();
+}
+
+function onNightChange(i) {
+  teamsData[i].selectedNight = document.getElementById(`night-${i}`).value;
+  updateSummary();
+}
+
+function selectAll(state) {
+  teamsData.forEach((_, i) => {
+    const chk = document.getElementById(`chk-${i}`);
+    const row = document.getElementById(`row-${i}`);
+    const sel = document.getElementById(`night-${i}`);
+    if (chk) {
+      chk.checked  = state;
+      row.classList.toggle('active', state);
+      if (sel) sel.disabled = !state;
+    }
+  });
+  updateSummary();
+}
+
+function updateSummary() {
+  const active = getActiveTeams();
+  const count  = active.length;
+  const season = document.getElementById('seasonSelect').value;
+  document.getElementById('activeCount').textContent = `${count} team${count!==1?'s':''} active`;
+  document.getElementById('generateSummaryText').textContent =
+    count > 0 ? `${count} team${count!==1?'s':''} selected for ${season}` : 'Select teams above to continue';
+  document.getElementById('generateSummaryDetail').textContent =
+    count > 0 ? active.map(t => t.team).join(' · ') : 'No teams selected';
+  document.getElementById('generateBtn').disabled = count === 0;
+  // Hide old link if selection changes
+  document.getElementById('linkOutput').classList.remove('visible');
+}
+
+function getActiveTeams() {
+  return teamsData.filter((_, i) => {
+    const chk = document.getElementById(`chk-${i}`);
+    return chk && chk.checked;
+  }).map((t, _, arr) => {
+    const i = teamsData.indexOf(t);
+    return {
+      team:    t.team,
+      mgr:     t.mgr,
+      night:   document.getElementById(`night-${i}`)?.value || t.night || ''
+    };
+  });
+}
+
+// ── GENERATE LINK ─────────────────────────────────────────────────────────────
+function generateLink() {
+  const active  = getActiveTeams();
+  const season  = document.getElementById('seasonSelect').value;
+  const baseUrl = document.getElementById('regPageUrl').value.trim();
+
+  if (!baseUrl) {
+    alert('Please enter your Registration Page URL first.');
+    document.getElementById('regPageUrl').focus();
+    return;
+  }
+
+  const config = { season, teams: active, generated: new Date().toISOString() };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(config))));
+
+  // Build the final URL
+  const sep = baseUrl.includes('?') ? '&' : '?';
+  const finalUrl = `${baseUrl}${sep}teams=${encoded}`;
+
+  document.getElementById('generatedUrl').textContent = finalUrl;
+  document.getElementById('linkSeason').textContent = season;
+  document.getElementById('linkOutput').classList.add('visible');
+  document.getElementById('linkOutput').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  window._generatedUrl = finalUrl;
+}
+
+// ── COPY LINK ─────────────────────────────────────────────────────────────────
+function copyLink() {
+  const url = window._generatedUrl;
+  if (!url) return;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Link`;
+    }, 2500);
+  }).catch(() => {
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Enter key on login
+['loginEmail','loginPassword'].forEach(id => {
+  document.getElementById(id)?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+});
+
+// Update generate summary when season changes
+document.getElementById('seasonSelect')?.addEventListener('change', updateSummary);
+</script>
+</body>
+</html>
