@@ -552,7 +552,7 @@ function renderResults(records, teamSearch, season) {
         <tr>
           <td>
             <div class="player-name">${esc(p[CONFIG.F_FIRST]||'')} ${esc(p[CONFIG.F_LAST]||'')}</div>
-            <div class="player-sub">#${esc(p[CONFIG.F_JERSEY]||'—')} · ${esc(p[CONFIG.F_EMAIL]||'—')}</div>
+            <div class="player-sub">#${esc(p[CONFIG.F_JERSEY]||'—')} · ${clean(p[CONFIG.F_EMAIL]||'—')}</div>
           </td>
           <td>${esc(p[CONFIG.F_ARRIVED]||'—')}</td>
           <td><span class="visit-badge">${esc(p[CONFIG.F_VISIT_ST]||'—')}</span></td>
@@ -637,6 +637,10 @@ function esc(s) {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+// Knack sometimes returns fields like email/phone wrapped in <a> tags — strip them
+function clean(s) {
+  return esc(String(s).replace(/<[^>]*>/g, '').trim());
+}
 
 // ── CSV EXPORT ────────────────────────────────────────────────────────
 function exportCSV() {
@@ -650,8 +654,8 @@ function exportCSV() {
     r[CONFIG.F_FIRST]    || '',
     r[CONFIG.F_LAST]     || '',
     r[CONFIG.F_JERSEY]   || '',
-    r[CONFIG.F_EMAIL]    || '',
-    r[CONFIG.F_PHONE]    || '',
+    String(r[CONFIG.F_EMAIL]  || '').replace(/<[^>]*>/g,'').trim(),
+    String(r[CONFIG.F_PHONE]  || '').replace(/<[^>]*>/g,'').trim(),
     r[CONFIG.F_ARRIVED]  || '',
     r[CONFIG.F_VISIT_ST] || '',
     isPaid(r) ? 'Paid' : 'Unpaid'
