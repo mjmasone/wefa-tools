@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEFA8 — Player ID</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Syne+Mono&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0D1117;
+  --surface: #161B22;
+  --surface2:#1F2937;
+  --border:  #30363D;
+  --text:    #E6EDF3;
+  --muted:   #7D8590;
+  --accent:  #F0883E;
+  --green:   #3FB950;
+  --blue:    #58A6FF;
+  --red:     #F85149;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, #F0883E08 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, #3FB95006 0%, transparent 50%);
+}
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+}
+.logo { font-family: 'Syne Mono', monospace; font-size: 16px; letter-spacing: 4px; color: var(--accent); }
+.header-sep { color: var(--border); }
+.header-sub { font-family: 'Syne Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.shell { max-width: 580px; margin: 0 auto; padding: 56px 24px 80px; }
+.eyebrow { font-family: 'Syne Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.page-title { font-family: 'Syne', sans-serif; font-size: clamp(36px, 7vw, 58px); font-weight: 800; line-height: 1; margin-bottom: 10px; background: linear-gradient(135deg, var(--text) 0%, #7D8590 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.page-desc { font-size: 14px; color: var(--muted); font-weight: 300; line-height: 1.7; margin-bottom: 40px; }
+.lookup-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px; margin-bottom: 24px; }
+.card-label { font-family: 'Syne Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+.field-group { margin-bottom: 16px; }
+.field-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+input[type="email"], input[type="tel"] { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-family: 'Instrument Sans', sans-serif; font-size: 15px; color: var(--text); outline: none; transition: border-color 0.15s; }
+input:focus { border-color: var(--accent); }
+input::placeholder { color: var(--muted); opacity: 0.6; }
+.lookup-btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 9px; padding: 14px 24px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.lookup-btn:hover { background: #e07835; transform: translateY(-1px); }
+.lookup-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.error-box { background: #F8514915; border: 1px solid #F8514930; border-radius: 8px; padding: 12px 16px; color: var(--red); font-family: 'Syne Mono', monospace; font-size: 12px; margin-top: 14px; }
+.spinner { width: 22px; height: 22px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 40px auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.season-select-wrap { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px 32px; margin-bottom: 24px; }
+.season-select-wrap.visible { display: block; }
+.season-select-title { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.season-select-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.season-list { display: flex; flex-direction: column; gap: 10px; }
+.season-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 14px 18px; font-family: 'Instrument Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--text); cursor: pointer; text-align: left; transition: all 0.15s; display: flex; align-items: center; justify-content: space-between; }
+.season-btn:hover { border-color: var(--accent); background: #F0883E10; }
+.season-btn .season-team { font-size: 12px; color: var(--muted); font-family: 'Syne Mono', monospace; }
+#idSection { display: none; }
+#idSection.visible { display: block; }
+.id-instructions { background: #3FB95015; border: 1px solid #3FB95030; border-radius: 10px; padding: 14px 18px; font-size: 13px; color: var(--green); font-family: 'Syne Mono', monospace; letter-spacing: 0.5px; margin-bottom: 24px; text-align: center; line-height: 1.6; }
+.id-card-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
+.id-card { width: 340px; background: linear-gradient(145deg, #1a1f2e 0%, #0f1318 100%); border: 1px solid #30363D; border-radius: 18px; overflow: hidden; box-shadow: 0 20px 60px #00000060, 0 0 0 1px #ffffff08 inset; font-family: 'Instrument Sans', sans-serif; position: relative; }
+.id-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #F0883E08 0%, transparent 40%, #3FB95006 100%); pointer-events: none; }
+.id-card-header { background: linear-gradient(90deg, #F0883E 0%, #e07835 100%); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; }
+.id-card-league { font-family: 'Syne Mono', monospace; font-size: 14px; letter-spacing: 4px; font-weight: 700; color: #fff; }
+.id-card-badge { font-family: 'Syne Mono', monospace; font-size: 9px; letter-spacing: 2px; color: #ffffff99; text-transform: uppercase; }
+.id-card-body { padding: 20px 18px; display: flex; gap: 18px; align-items: flex-start; }
+.id-photo-wrap { flex-shrink: 0; width: 88px; height: 100px; border-radius: 10px; overflow: hidden; background: var(--surface2); border: 2px solid #30363D; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+.id-photo-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.id-info { flex: 1; min-width: 0; }
+.id-name { font-family: 'Syne', sans-serif; font-size: 19px; font-weight: 800; color: #E6EDF3; line-height: 1.15; margin-bottom: 4px; word-break: break-word; }
+.id-team { font-size: 12px; color: var(--accent); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 14px; word-break: break-word; }
+.id-meta { display: flex; flex-direction: column; gap: 6px; }
+.id-meta-row { display: flex; align-items: baseline; gap: 8px; }
+.id-meta-label { font-family: 'Syne Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); flex-shrink: 0; width: 52px; }
+.id-meta-value { font-size: 13px; font-weight: 500; color: #E6EDF3; }
+.id-card-footer { border-top: 1px solid #30363D; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; }
+.id-season-pill { background: #3FB95020; border: 1px solid #3FB95040; border-radius: 20px; padding: 4px 12px; font-family: 'Syne Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--green); text-transform: uppercase; }
+.id-jersey-big { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--accent); line-height: 1; }
+.id-jersey-label { font-family: 'Syne Mono', monospace; font-size: 8px; letter-spacing: 2px; color: var(--muted); text-align: right; text-transform: uppercase; margin-top: 2px; }
+.id-actions { display: flex; flex-direction: column; gap: 10px; }
+.action-btn { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; padding: 13px 20px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.action-btn:hover { border-color: var(--text); color: var(--text); }
+footer { border-top: 1px solid var(--border); padding: 20px 48px; display: flex; align-items: center; gap: 12px; font-family: 'Syne Mono', monospace; font-size: 11px; color: var(--muted); }
+@media (max-width: 480px) { header { padding: 0 20px; } .shell { padding: 36px 16px 60px; } .lookup-card { padding: 24px 20px; } .id-card { width: 100%; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">W8</div>
+  <span class="header-sep">—</span>
+  <div class="header-sub">Player ID</div>
+</header>
+
+<div class="shell">
+  <div class="eyebrow">WEFA8 League</div>
+  <div class="page-title">Player<br>ID</div>
+  <p class="page-desc">Enter your email and phone number to generate your league ID. Directors and refs can use this same page to verify a player's identity.</p>
+
+  <div class="lookup-card" id="lookupCard">
+    <div class="card-label">Player Lookup</div>
+    <div class="field-group">
+      <label class="field-label">Email Address</label>
+      <input type="email" id="inputEmail" placeholder="your@email.com" autocomplete="email" />
+    </div>
+    <div class="field-group">
+      <label class="field-label">Phone Number</label>
+      <input type="tel" id="inputPhone" placeholder="(555) 555-5555" autocomplete="tel" />
+    </div>
+    <div id="lookupError"></div>
+    <button class="lookup-btn" id="lookupBtn" onclick="doLookup()">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Generate ID
+    </button>
+  </div>
+
+  <div id="loadingArea" style="display:none;"><div class="spinner"></div></div>
+
+  <div class="season-select-wrap" id="seasonSelector">
+    <div class="season-select-title">Select a Season</div>
+    <div class="season-select-sub">We found records across multiple seasons. Choose which ID to display.</div>
+    <div class="season-list" id="seasonList"></div>
+  </div>
+
+  <div id="idSection">
+    <div class="id-instructions">📸 &nbsp;Screenshot this screen to save your ID to your camera roll</div>
+    <div class="id-card-wrap">
+      <div class="id-card" id="theIdCard">
+        <div class="id-card-header">
+          <div class="id-card-league">WEFA8</div>
+          <div class="id-card-badge">Player ID</div>
+        </div>
+        <div class="id-card-body">
+          <div class="id-photo-wrap" id="photoWrap">⚽</div>
+          <div class="id-info">
+            <div class="id-name" id="idName">—</div>
+            <div class="id-team" id="idTeam">—</div>
+            <div class="id-meta">
+              <div class="id-meta-row">
+                <span class="id-meta-label">Phone</span>
+                <span class="id-meta-value" id="idPhone">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="id-card-footer">
+          <div class="id-season-pill" id="idSeason">Season</div>
+          <div>
+            <div class="id-jersey-big" id="idJersey">#—</div>
+            <div class="id-jersey-label">Jersey</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="id-actions">
+      <button class="action-btn" onclick="resetAll()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+        Look Up Another Player
+      </button>
+      <button class="action-btn" onclick="changeSeason()" id="changeSeasonBtn" style="display:none;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Change Season
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer>WEFA8 · Player ID · Internal Use Only</footer>
+
+<script>
+const CONFIG = {
+  APP_ID:  '609ad46dbb2a10001bf7284d',
+  API_KEY: '124c547e-b0be-47a6-9b71-6c3ff0076925',
+  OBJ:       'object_1',
+  F_FIRST:   'field_2',
+  F_LAST:    'field_3',
+  F_PHONE:   'field_15',
+  F_EMAIL:   'field_124',
+  F_JERSEY:  'field_398',
+  F_DAY:     'field_443',
+  F_TEAM:    'field_445',
+  F_ARRIVED: 'field_88',
+  F_PHOTO:   'field_427',
+};
+
+// Season name order for sorting — higher index = more recent within a year
+const SEASON_ORDER = { spring: 0, summer: 1, fall: 2, winter: 3 };
+
+let allRecords = [], currentRecord = null;
+
+async function doLookup() {
+  const email = document.getElementById('inputEmail').value.trim();
+  const phone = normalizePhone(document.getElementById('inputPhone').value.trim());
+  const errEl = document.getElementById('lookupError');
+  errEl.innerHTML = '';
+  if (!email || !phone) {
+    errEl.innerHTML = `<div class="error-box">⚠ Please enter both your email and phone number.</div>`;
+    return;
+  }
+  setLoading(true);
+  try {
+    const filters = encodeURIComponent(JSON.stringify({
+      match: 'and',
+      rules: [{ field: CONFIG.F_EMAIL, operator: 'contains', value: email }]
+    }));
+    const res = await fetch(
+      `https://api.knack.com/v1/objects/${CONFIG.OBJ}/records?rows_per_page=1000&filters=${filters}`,
+      { headers: { 'X-Knack-Application-Id': CONFIG.APP_ID, 'X-Knack-REST-API-Key': CONFIG.API_KEY, 'Content-Type': 'application/json' } }
+    );
+    if (!res.ok) throw new Error(`API error ${res.status}`);
+    const data = await res.json();
+    const matched = (data.records || []).filter(r =>
+      normalizePhone(clean(r[CONFIG.F_PHONE] || '')) === phone
+    );
+
+    if (matched.length === 0) {
+      setLoading(false);
+      errEl.innerHTML = `<div class="error-box">⚠ No player found matching that email and phone number. Please check your details and try again.</div>`;
+      return;
+    }
+
+    allRecords = matched;
+
+    // DEBUG — remove after confirming photo field shape
+    console.log('Sample record field_427 (photo):', matched[0][CONFIG.F_PHOTO]);
+    console.log('Full sample record:', matched[0]);
+
+    const seasons = extractSeasons(matched);
+    setLoading(false);
+
+    // Always auto-select the most recent season — only show selector if user asks
+    showId(mostRecentForSeason(matched, seasons[0]), seasons.length > 1);
+
+  } catch(err) {
+    setLoading(false);
+    errEl.innerHTML = `<div class="error-box">❌ Lookup failed: ${err.message}</div>`;
+  }
+}
+
+// ── SEASON PARSING ────────────────────────────────────────────────────
+// Handles: "Fall 2024", "fall 2024", "2024 Fall", "Spring '24", "Winter2023"
+const SEASON_REGEX = /\b(fall|winter|spring|summer)\b.*?\b(20\d{2})\b|\b(20\d{2})\b.*?\b(fall|winter|spring|summer)\b/i;
+
+function parseSeasonStr(str) {
+  if (!str) return null;
+  const m = str.match(SEASON_REGEX);
+  if (!m) return null;
+  const name = (m[1] || m[4]).toLowerCase();
+  const year = parseInt(m[2] || m[3], 10);
+  return { name, year };
+}
+
+function seasonSortKey(parsed) {
+  if (!parsed) return 0;
+  // e.g. Fall 2024 → 2024 * 10 + 2 = 20242
+  return parsed.year * 10 + (SEASON_ORDER[parsed.name] ?? 0);
+}
+
+function seasonLabel(record) {
+  // Try field_443 first (stored season string)
+  const regDay = clean(record[CONFIG.F_DAY] || '');
+  if (regDay && parseSeasonStr(regDay)) return normalizeSeasonLabel(regDay);
+
+  // Fall back to arrived date
+  const arrived = record[CONFIG.F_ARRIVED] || '';
+  const parts = arrived.split('/');
+  if (parts.length < 3) return 'Unknown Season';
+  const month = parseInt(parts[0], 10), year = parts[2];
+  if (month >= 3  && month <= 5)  return `Spring ${year}`;
+  if (month >= 6  && month <= 8)  return `Summer ${year}`;
+  if (month >= 9  && month <= 11) return `Fall ${year}`;
+  return `Winter ${year}`;
+}
+
+function normalizeSeasonLabel(str) {
+  // Capitalize first letter of season name, keep year — output: "Fall 2024"
+  const p = parseSeasonStr(str);
+  if (!p) return str;
+  return `${p.name.charAt(0).toUpperCase() + p.name.slice(1)} ${p.year}`;
+}
+
+function extractSeasons(records) {
+  const seen = new Set(), seasons = [];
+  records.forEach(r => {
+    const l = seasonLabel(r);
+    if (l && !seen.has(l)) { seen.add(l); seasons.push(l); }
+  });
+  // Sort newest first
+  return seasons.sort((a, b) => {
+    const pa = parseSeasonStr(a), pb = parseSeasonStr(b);
+    return seasonSortKey(pb) - seasonSortKey(pa);
+  });
+}
+
+function mostRecentForSeason(records, seasonLbl) {
+  return records
+    .filter(r => seasonLabel(r) === seasonLbl)
+    .sort((a, b) => parseDate(b[CONFIG.F_ARRIVED] || '') - parseDate(a[CONFIG.F_ARRIVED] || ''))[0]
+    || records[0];
+}
+
+function parseDate(str) {
+  const p = str.split('/');
+  return p.length < 3 ? 0 :
+    new Date(`${p[2]}-${p[0].padStart(2,'0')}-${p[1].padStart(2,'0')}`).getTime() || 0;
+}
+
+// ── UI ────────────────────────────────────────────────────────────────
+function showSeasonSelector(seasons, records) {
+  document.getElementById('lookupCard').style.display = 'none';
+  document.getElementById('seasonList').innerHTML = seasons.map(s => {
+    const rep  = mostRecentForSeason(records, s);
+    const team = clean(rep[CONFIG.F_TEAM] || '');
+    return `<button class="season-btn" onclick="onSeasonPick('${esc(s)}')">${esc(s)}${team ? `<span class="season-team">${esc(team)}</span>` : ''}</button>`;
+  }).join('');
+  document.getElementById('seasonSelector').classList.add('visible');
+}
+
+function onSeasonPick(s) {
+  document.getElementById('seasonSelector').classList.remove('visible');
+  showId(mostRecentForSeason(allRecords, s), true);
+}
+
+function showId(record, multiSeason) {
+  currentRecord = record;
+  const first  = clean(record[CONFIG.F_FIRST]  || '');
+  const last   = clean(record[CONFIG.F_LAST]   || '');
+  const phone  = clean(record[CONFIG.F_PHONE]  || '');
+  const jersey = clean(record[CONFIG.F_JERSEY] || '');
+  const team   = clean(record[CONFIG.F_TEAM]   || '');
+  const season = seasonLabel(record);
+
+  // Photo — log output will tell us which path is correct
+  const photoField = record[CONFIG.F_PHOTO];
+  const photoUrl   = typeof photoField === 'string'
+    ? photoField
+    : photoField?.url || photoField?.thumb_url || null;
+
+  document.getElementById('idName').textContent   = `${first} ${last}`;
+  document.getElementById('idTeam').textContent   = team   || '—';
+  document.getElementById('idPhone').textContent  = phone  || '—';
+  document.getElementById('idJersey').textContent = jersey ? `#${jersey}` : '—';
+  document.getElementById('idSeason').textContent = season;
+
+  const pw = document.getElementById('photoWrap');
+  pw.innerHTML = photoUrl
+    ? `<img src="${photoUrl}" alt="Player photo" onerror="this.parentElement.innerHTML='⚽'" />`
+    : '⚽';
+
+  document.getElementById('lookupCard').style.display = 'none';
+  document.getElementById('changeSeasonBtn').style.display = multiSeason ? 'flex' : 'none';
+  document.getElementById('idSection').classList.add('visible');
+}
+
+function changeSeason() {
+  document.getElementById('idSection').classList.remove('visible');
+  showSeasonSelector(extractSeasons(allRecords), allRecords);
+}
+
+function resetAll() {
+  allRecords = []; currentRecord = null;
+  document.getElementById('idSection').classList.remove('visible');
+  document.getElementById('seasonSelector').classList.remove('visible');
+  document.getElementById('lookupCard').style.display = 'block';
+  document.getElementById('lookupError').innerHTML = '';
+  document.getElementById('inputEmail').value = '';
+  document.getElementById('inputPhone').value = '';
+}
+
+function setLoading(on) {
+  document.getElementById('loadingArea').style.display = on ? 'block' : 'none';
+  document.getElementById('lookupBtn').disabled = on;
+  document.getElementById('lookupBtn').innerHTML = on
+    ? `<div class="spinner" style="width:18px;height:18px;margin:0;border-width:2px;"></div> Searching…`
+    : `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Generate ID`;
+}
+
+function normalizePhone(s) { return s.replace(/\D/g, ''); }
+function clean(s) { return String(s).replace(/<[^>]*>/g, '').trim(); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('lookupCard').style.display !== 'none') doLookup();
+});
+</script>
+</body>
+</html>
