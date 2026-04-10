@@ -92,7 +92,7 @@ header {
 
 .search-row {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: 1.2fr 1fr 1fr auto;
   gap: 14px;
   align-items: end;
 }
@@ -390,6 +390,19 @@ select option { background: var(--surface2); }
           </optgroup>
         </select>
       </div>
+      <div class="field-group">
+        <label class="field-label">Day</label>
+        <select id="dayInput">
+          <option value="">— Any day —</option>
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+          <option value="Sunday">Sunday</option>
+        </select>
+      </div>
       <button class="search-btn" id="searchBtn" onclick="runSearch()">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         Search
@@ -459,6 +472,7 @@ async function runSearch() {
   const apiKey = CONFIG.API_KEY;
   const team   = document.getElementById('teamInput').value.trim();
   const season = parseSeason(document.getElementById('seasonInput').value);
+  const day    = document.getElementById('dayInput').value;
   const area   = document.getElementById('resultsArea');
 
   if (!team) {
@@ -471,10 +485,15 @@ async function runSearch() {
 
   try {
     const records  = await fetchRecords(apiKey, team);
-    const filtered = season
+    let filtered = season
       ? records.filter(r => dateMatchesSeason(getArrivedDate(r), season))
       : records;
-    renderResults(filtered, team, season);
+    if (day) {
+      filtered = filtered.filter(r =>
+        (r[CONFIG.F_REG_DAY] || '').toLowerCase().includes(day.toLowerCase())
+      );
+    }
+    renderResults(filtered, team, season, day);
   } catch(err) {
     area.innerHTML = `<div class="error-box">❌ ${err.message}</div>`;
   } finally {
@@ -513,7 +532,7 @@ async function fetchRecords(apiKey, team) {
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────
-function renderResults(records, teamSearch, season) {
+function renderResults(records, teamSearch, season, day) {
   const area = document.getElementById('resultsArea');
 
   if (records.length === 0) {
@@ -521,8 +540,8 @@ function renderResults(records, teamSearch, season) {
     area.innerHTML = `
       <div class="state-box">
         <div class="state-icon">⚽</div>
-        <p>No players found for "${esc(teamSearch)}"${sl ? ' in ' + sl : ''}</p>
-        <small>Try a shorter team name or a different season</small>
+        <p>No players found for "${esc(teamSearch)}"${sl ? ' in ' + sl : ''}${day ? ' on ' + day + 's' : ''}</p>
+        <small>Try a shorter team name, different season, or different day</small>
       </div>`;
     return;
   }
@@ -591,6 +610,7 @@ function renderResults(records, teamSearch, season) {
     <div class="results-meta">
       <div class="results-label">${esc(teamSearch)}</div>
       ${sl ? `<div class="results-sub">${sl}</div>` : ''}
+      ${day ? `<div class="results-sub">${esc(day)}s</div>` : ''}
       <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
     </div>
     <div class="summary-pills">
@@ -670,7 +690,7 @@ function exportCSV() {
 }
 
 // Enter key triggers search
-['teamInput','seasonInput'].forEach(id => {
+['teamInput','seasonInput','dayInput'].forEach(id => {
   document.getElementById(id)?.addEventListener('keydown', e => {
     if (e.key === 'Enter') runSearch();
   });
